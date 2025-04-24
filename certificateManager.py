@@ -41,7 +41,7 @@ def sendNotification(message_list):
 
     snsClient = boto3.client('sns', region_name='us-west-2')
     snsClient.publish(
-        TopicArn='arn:aws:sns:us-west-2:359459309488:CertExpirationNotifications',
+        TopicArn='arn:aws:sns:us-west-2:359459309488:CertExpirationNotifications-Test',
         Message=message_body,
         Subject="SSL certificates expiration report"
     )
