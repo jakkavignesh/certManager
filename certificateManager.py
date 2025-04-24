@@ -84,6 +84,10 @@ def get_certificates_list():
                 print(f'Problem in : {profile} Error : {error}')
                 continue
             print("Done " + profile)
+
+    todayDate = datetime.now(timezone.utc)
+    df = pd.DataFrame(expiring_certificates_details)
+    df.to_excel(f'{todayDate}.xlsx', index=False)
     
     sendNotification(expiring_certificates_details)
 def main():
