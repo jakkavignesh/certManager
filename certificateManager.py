@@ -39,8 +39,7 @@ def sendNotification(message_list):
         expiration_date = item.split(',')[1].split(': ')[1]
         message_body += f"- Domain: {domain} | Expiration Date: {expiration_date} | Certificate Name: {certificate_name}\n"
 
-    session = boto3.Session(profile_name='investor-mangement-services')
-    snsClient = session.client('sns', region_name='us-west-2')
+    snsClient = boto3.client('sns', region_name='us-west-2')
     snsClient.publish(
         TopicArn='arn:aws:sns:us-west-2:359459309488:CertExpirationNotifications',
         Message=message_body,
@@ -53,8 +52,7 @@ def get_certificate_manager_details(arns_list, profile, region):
     for arn in arns_list:
         certificate_details = []
         try: 
-            session = boto3.Session(profile_name = profile)
-            certificate_manager_client = session.client('acm', region_name = region)
+            certificate_manager_client = boto3.client('acm', region_name = region)
             certificates = certificate_manager_client.describe_certificate(CertificateArn = arn)
             not_after = certificates['Certificate']['NotAfter'].replace(tzinfo=timezone.utc)
             formatted_not_after = not_after.strftime('%Y-%m-%d')
@@ -77,8 +75,7 @@ def get_certificates_list():
         for region in aws_regions:
             expired_certificates_arns = []
             try:
-                session = boto3.Session(profile_name = profile)
-                certificate_manager_client = session.client('acm', region_name = region)
+                certificate_manager_client = boto3.client('acm', region_name = region)
                 expired_certificates = certificate_manager_client.list_certificates(CertificateStatuses = ['ISSUED',])
                 for certificate in expired_certificates['CertificateSummaryList']:
                     expired_certificates_arns.append(certificate['CertificateArn'])
