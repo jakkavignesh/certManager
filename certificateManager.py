@@ -30,7 +30,7 @@ def sendNotification(message_list):
         print("No expiring certificates to notify.")
         return
 
-    message_body = "These are the SSL certificates which are going to expire in next 30 days, please verify and confirm the investors who are active."
+    message_body = "These are the SSL certificates which are going to expire in next 30 days.\n***** Please verify and confirm the investors who are active.*****"
     message_body += "\n\nExpiring Certificates:\n\n"
     
     for item in message_list:
@@ -86,8 +86,9 @@ def get_certificates_list():
             print("Done " + profile)
 
     todayDate = datetime.now(timezone.utc)
-    df = pd.DataFrame(expiring_certificates_details)
-    df.to_excel(f'{todayDate}.xlsx', index=False)
+    
+    df_expiring = pd.DataFrame(expiring_certificates_details, columns=['Details'])
+    df_expiring.to_excel(f'expiring_certificates_{todayDate.strftime("%Y%m%d")}.xlsx', index=False)
     
     sendNotification(expiring_certificates_details)
 def main():
